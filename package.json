@@ -1,0 +1,27 @@
+{
+  "name": "vlc-loader",
+  "version": "1.0.9",
+  "description": "Remote VLC and Peerflix control",
+  "main": "vlc_loader.js",
+  "dependencies": {
+    "multer": "^1.1.0",
+    "node-notifier": "^4.4.0",
+    "ffi": "^2.0.0",
+    "express-ws": "^1.0.0-rc.2",
+    "express": "^4.13.4",
+    "ref": "^1.3.2",
+    "regedit": "^2.2.6",
+    "watchjs": "^0.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "vlc",
+    "perrflix",
+    "remote"
+  ],
+  "author": "Sp",
+  "license": "ISC"
+}

@@ -1,0 +1,43 @@
+/*   html/css coding by vskuzmin28 / vk.com/div_vskuzmin / brainstorage.me/vskuzmin/portfolio */
+
+/* setting */
+
+html, body {color:#fff;}
+input, a, .btn {outline:0;border:0;transition:all 0.3s ease-in-out;}
+
+/* body {overflow-x:hidden;} */
+
+/* setting */
+
+input:focus:-moz-placeholder {color:#949494;}
+input:focus::-webkit-input-placeholder {color:#949494;}
+input:-moz-placeholder {color:#949494;}
+input::-webkit-input-placeholder {color:#949494;}
+
+/* buttons */
+
+.btn {margin-bottom:20px;height:140px;font:40px 'tahoma';text-align:center;line-height:140px;color:#fff;background:#000;border-radius:6px;cursor:pointer;}
+.btn:hover,
+.btn:focus {opacity:0.8;}
+
+.btn-green {background:#008000;}
+.btn-red {background:#f00;}
+.btn-blue {background:#2196f3;}
+
+/**/
+
+#upload {display:none;}
+
+/* journal */
+
+#log {padding:20px;height:160px;border:1px solid #1d1d1d;border-radius:6px;overflow-y:scroll;-ms-overflow-style:none;overflow:-moz-scrollbars-none;}
+#log::-webkit-scrollbar {width:0;}
+#log p {margin-bottom:10px;font:16px 'tahoma';color:#1d1d1d;max-height: 999999px;}
+
+/* main */
+
+main {margin:6% 0 0 0;padding:0 50px;width:auto;} 
+
+/**/ 
+
+/*   html/css coding by vskuzmin28 / vk.com/div_vskuzmin / brainstorage.me/vskuzmin/portfolio */
