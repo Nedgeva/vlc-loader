@@ -1,2 +1,2 @@
-# vlc-loader
+# VLC Loader
 Remote VLC startup &amp; torrent stream
