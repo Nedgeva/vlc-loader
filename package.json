@@ -2,7 +2,7 @@
   "name": "vlc-loader",
   "version": "1.0.9",
   "description": "Remote VLC and Peerflix control",
-  "main": "vlc_loader.js",
+  "main": "app.js",
   "dependencies": {
     "multer": "^1.1.0",
     "node-notifier": "^4.4.0",
