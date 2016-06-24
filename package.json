@@ -22,10 +22,14 @@
     "perrflix",
     "remote"
   ],
-  "repository" :
-  { "type" : "git",
-	"url" : "https://github.com/Nedgeva/vlc-loader.git"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nedgeva/vlc-loader.git"
   },
   "author": "Sp",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nedgeva/vlc-loader/issues"
+  },
+  "homepage": "https://github.com/Nedgeva/vlc-loader#readme"
 }

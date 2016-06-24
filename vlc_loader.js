@@ -75,14 +75,14 @@ var vlc = function(dataset) {
 
 		var pid = ref.alloc(ref.types.ulong);
 		var tid = user32.GetWindowThreadProcessId(hwnd, pid);
-		var vsisble = user32.IsWindowVisible(hwnd);
+		var visible = user32.IsWindowVisible(hwnd);
 		
 		//var windText = ref.readCString(buf, 0);
 		//var className = ref.readCString(buf2, 0);
 
 		//console.log('lParam ' + lParam, 'PID: ' + ref.get(pid));
 		//console.log('Title: ' + windText, 'Class: ' + className, 'wHandle: ' + hwnd, 'TID: ' + tid, 'PID: ' + ref.get(pid));
-		if (lParam === ref.get(pid) && vsisble) {
+		if (lParam === ref.get(pid) && visible) {
 			var bool = user32.SetWindowPos(hwnd, 0, 1366+50, 0, 100, 100, 0x0010);
 			dataset.status.setStatus = 'VLC running';
 			dataset.wMoved = true;
