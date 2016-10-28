@@ -11,6 +11,7 @@ module.exports = {
 		exeName: 'vlc.exe',
 		wMoved: false,
 		hwnd: null,
+		tid: null,
 		cmd: 'start',
 		busy: false,
 		status: null,
@@ -50,11 +51,10 @@ var vlc = function(dataset) {
 
 	var bindings = {
 		EnumWindows: ['bool', [voidPtr, 'int32']],
-		//GetWindowTextA: ['long', ['long', stringPtr, 'int32']],
-		//GetClassNameA: ['long', ['long', stringPtr, 'int32']],
 		GetWindowThreadProcessId: ['long', ['long', dwordPtr]],
 		SetWindowPos: ['bool', ['long', 'long', 'int32', 'int32', 'int32', 'int32', 'uint']],
 		SendMessageA: ['int32', ['long', 'uint', 'int32', 'int32']],
+		EnumThreadWindows: ['bool', ['long', voidPtr, 'int32']],
 		IsWindowVisible: ['bool', ['long']]
 	};
 
@@ -68,39 +68,38 @@ var vlc = function(dataset) {
 	 * @return {bool} - return 'true' to proceed, 'false' to stop
 	 */	
 	var cbMoveWindow = ffi.Callback('bool', ['long', 'int32'], function(hwnd, lParam) {
-		//var buf = new Buffer(255);
-		//var buf2 = new Buffer(255);
-		//var resWindText = user32.GetWindowTextA(hwnd, buf, 255);
-		//var resClassName = user32.GetClassNameA(hwnd, buf2, 255);
-
 		var pid = ref.alloc(ref.types.ulong);
 		var tid = user32.GetWindowThreadProcessId(hwnd, pid);
 		var visible = user32.IsWindowVisible(hwnd);
 		
-		//var windText = ref.readCString(buf, 0);
-		//var className = ref.readCString(buf2, 0);
-
-		//console.log('lParam ' + lParam, 'PID: ' + ref.get(pid));
-		//console.log('Title: ' + windText, 'Class: ' + className, 'wHandle: ' + hwnd, 'TID: ' + tid, 'PID: ' + ref.get(pid));
 		if (lParam === ref.get(pid) && visible) {
 			var bool = user32.SetWindowPos(hwnd, 0, 1366+50, 0, 100, 100, 0x0010);
+			dataset.tid = tid;
 			dataset.status.setStatus = 'VLC running';
 			dataset.wMoved = true;
 			dataset.hwnd = hwnd;
 			return false;
 		}
 		return true;
-	})
+	});
+	
+	var cbEnumProcWindow = ffi.Callback('bool', ['long', 'int32'], function(hwnd, lParam) {
+		var visible = user32.IsWindowVisible(hwnd);
+		if (visible) {
+			var result = user32.SendMessageA(hwnd, 0x0010, 0, 0);
+			return false;
+		}
+		return true;
+	});
 	
 	/**
 	 * Sends messages to window close 
 	 * @param {long} hwnd - window's handle passed by waitForWindow
 	 * @return {bool} - return 'true' to proceed, 'false' to stop
 	 */
-	var closeWindow = function(dataset) {
-		
+	var closeWindow = function(dataset) {	
 		return new Promise(function(resolve, reject) {
-			var result = user32.SendMessageA(dataset.hwnd, 0x0010, 0, 0);
+			var bool = user32.EnumThreadWindows(dataset.tid, cbEnumProcWindow, 0);
 			dataset.status.setStatus = 'VLC stopped';
 			dataset.wMoved = false;
 			resolve(dataset);
@@ -151,9 +150,8 @@ var vlc = function(dataset) {
 			
 			dataset.status.setStatus = 'Trying to spawn VLC executable...';
 			var targetExe = path.join(dataset.installDir, dataset.exeName);
-			//dataset.proc = cp.spawn(targetExe, args, {detached: true});
 			dataset.proc = cp.spawn(targetExe, args, {stdio: ['ignore', 'ignore', 'ignore'], detached: true});
-			//dataset.proc = cp.execFile(targetExe, args);
+			console.log('PID', dataset.proc.pid)
 			dataset.proc.on('exit', function(code, signal) {
 				if(dataset.cmd !== 'watch') {
 					dataset.wMoved = false;
@@ -162,7 +160,6 @@ var vlc = function(dataset) {
 				}
 			});
 			dataset.proc.unref();
-			//waitForWindow(proc.pid, 1000, cbWindowProc);
 			resolve(dataset);
 			
 		})
@@ -190,12 +187,11 @@ var vlc = function(dataset) {
 					}			
 				})
 			}
-			// Run code inside Promise!
+
 			if(!dataset.installDir) {
 				dataset.status.setStatus = 'Looking for VLC path...';
 				regSearch(dataset);
 			} else {
-				// skip if path is cached
 				resolve(dataset);
 			}
 			
